@@ -44,7 +44,9 @@ input_file = r"C:\Users\Lenovo\Desktop\see\WBDATA.xls"
 
 country_name = ['Australia','United States','Brazil','Germany', 'Kenya','Canada']
 column_name = ['Country Name', '1990','1996','2002','2008','2014','2020']
-criterion = ['Mortality rate, under-5 (per 1,000 live births)','Population, total', 'Total greenhouse gas emissions (kt of CO2 equivalent)', 'Forest area (sq. km)', 'Electricity production from coal sources (% of total)']
+criterion = ['Mortality rate, under-5 (per 1,000 live births)','Population, total', 
+             'Total greenhouse gas emissions (kt of CO2 equivalent)', 'Forest area (sq. km)',
+             'Electricity production from coal sources (% of total)']
 
 #Data for both original and transposed mortality figure
 mort, mort_r = file_read_transpose_csv(input_file,country_name,column_name,criterion[0])
@@ -64,8 +66,60 @@ Elect, Elect_y = file_read_transpose_csv(input_file,country_name,column_name,cri
 
 #plotting grouped bar chart to compare countries total greenhouse gas across time series
 green_g.plot(kind='bar', rot = 45)
-plt.title('Grouped Bar Chart Analysis of Greenhouse Gas Emission')
-plt.xlabel('Countries')
-plt.ylabel('Greenhouse Emission')
+plt.title('Grouped Bar Chart Analysis of Greenhouse Gas Emission'.upper(), fontweight ='bold')
+plt.xlabel('Countries', fontweight ='bold')
+plt.ylabel('Greenhouse Emission', fontweight ='bold')
 plt.rcParams.update({'figure.figsize':[8,6], 'lines.linewidth': 3, 'figure.dpi':200})
 plt.show()
+
+
+#plotting grouped bar chart to compare population of various countries across time series
+pop_total.plot(kind='bar', rot = 45)
+plt.title('Grouped Bar Chart of Population Distribution'.upper(),fontweight ='bold')
+plt.xlabel('Countries', fontweight ='bold')
+plt.ylabel('Population', fontweight ='bold')
+plt.rcParams.update({'figure.figsize':[8,6], 'lines.linewidth': 3, 'figure.dpi':200})
+plt.show()
+
+#Producing a line plot from for Forest Data
+def line_plot(Forest_y, title, x_label, y_label):
+    '''Plots a line graph of forest area across time series
+    Forest_y: Forest data    
+    Title :title of chart
+    x_label : x-axis label
+    y_label: y_axis label'''
+    plt.figure(figsize = (10,5))
+    Forest_y.plot(legend = True, kind ='line', style = '--')
+    plt.title(title.upper(), fontweight ='bold')
+    plt.legend(bbox_to_anchor=(1,1))
+    plt.xlabel(x_label, fontweight ='bold')
+    plt.ylabel(y_label, fontweight ='bold')
+    #plt.legend(legend_data, fontsize = 7)
+    return plt.show()
+    
+title1 = 'Forest Distribution Chart'
+x_label1 = 'Year'
+y_label1 = 'Country'
+
+line_plot(Forest_y, title1, x_label1, y_label1)
+
+#Plotting Line graph from Electricty generted from coal data
+def line_plot(Elect_y, title, x_label, y_label):
+    '''Plots a line graph of electricity generation from coal across time series
+    Elect_y: Electricity data    
+    Title :title of chart
+    x_label : x-axis label
+    y_label: y_axis label'''
+    plt.figure(figsize = (10,5))
+    Elect_y.plot(legend = True, kind ='line', style = '--')
+    plt.title(title.upper(), fontweight ='bold' )
+    plt.xlabel(x_label, fontweight ='bold')
+    plt.ylabel(y_label, fontweight ='bold')
+    #plt.legend(legend_data, fontsize = 7)
+    return plt.show()
+    
+title1 = 'Electricity generation from coal'
+x_label1 = 'Year'
+y_label1 = 'Country'
+
+line_plot(Elect_y, title1, x_label1, y_label1)
