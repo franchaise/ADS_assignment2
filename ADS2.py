@@ -1,18 +1,17 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+# Importing python libraries to carry out data importation, sorting, analysis and presentation
+
 """
 Created on Sat Dec 10 23:19:11 2022
 
 @author: Lenovo
 """
 
-# Importing python libraries to carry out data importation, sorting, analysis and presentation
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 from scipy.stats import describe
 
 # setting display to show rows and column for easy readability
@@ -41,7 +40,7 @@ def file_read_transpose_csv(
 
     WB_data = pd.read_excel(input_file, skiprows=3)
 
-    # Filtering indicator Name
+    # Subset the dataframe to only include rows of selected variables of selected columns
 
     WB_data = WB_data[WB_data['Indicator Name'] == criterion]
     WB_data = WB_data[column_name]
@@ -59,6 +58,8 @@ def file_read_transpose_csv(
 
     return (WB_data, WB_data_t)
 
+
+# Reading file
 
 input_file = r"C:\Users\Lenovo\Desktop\see\WBDATA.xls"
 
@@ -110,7 +111,8 @@ criterion = ['Mortality rate, under-5 (per 1,000 live births)',
 (Elect, Elect_y) = file_read_transpose_csv(input_file, country_name,
         column_name, criterion[4])
 
-# Calculating statistical summary for population
+# Calculating statistical summary for population: Pop_stats
+
 Pop_stats = describe(pop_total_y)
 for key,value in Pop_stats._asdict().items():
     print(pop_total_y, f"{key}: {value}")
@@ -125,7 +127,7 @@ plt.ylabel('Greenhouse Emission', fontweight='bold')
 plt.rcParams.update({'figure.figsize': [8, 6], 'lines.linewidth': 3,
                     'figure.dpi': 200})
 
-# Save ad show plot
+# Save and show plot
 
 plt.savefig('Group_bar_Greenhouse_gas.png')
 plt.show()
@@ -240,11 +242,25 @@ United_States.corr()
 
 # Plotting Heatmap correlation for United State
 
-plt.figure(figsize=(8, 5))
-sns.heatmap(United_States.corr(), annot=True, cmap='summer',
-            xticklabels=True, yticklabels=True)
-plt.xticks(rotation=45)
-plt.yticks(rotation=45)
+US_cor = United_States.corr()
+plt.imshow(US_cor, cmap='summer', interpolation='none')
+plt.colorbar()
+plt.xticks(range(len(United_States.columns)), United_States.columns,
+           rotation=65)
+plt.yticks(range(len(United_States.columns)), United_States.columns)
+plt.gcf().set_size_inches(8, 8)
+
+lab = US_cor.values
+for a in range(lab.shape[0]):
+    for b in range(lab.shape[1]):
+        plt.text(
+            b,
+            a,
+            '{:.2f}'.format(lab[a, b]),
+            ha='center',
+            va='center',
+            color='black',
+            )
 plt.title('United States Correlation Heatmap'.upper(), fontweight='bold'
           )
 
@@ -254,14 +270,14 @@ plt.savefig('US_Heatmap.png')
 plt.show()
 
 # ------------------------------------------------------------------------------
-# Creating DataFrame for Australia with indicators
+# Creating DataFrame for Germany with indicators
 
-Australia = pd.DataFrame({
-    'Population': pop_total_y['Australia'],
-    'Greenhouse gas': green_gy['Australia'],
-    'Mortality': mort_r['Australia'],
-    'Forest area': Forest_y['Australia'],
-    'Electricity ': Elect_y['Australia'],
+Germany = pd.DataFrame({
+    'Population': pop_total_y['Germany'],
+    'Greenhouse gas': green_gy['Germany'],
+    'Mortality': mort_r['Germany'],
+    'Forest area': Forest_y['Germany'],
+    'Electricity ': Elect_y['Germany'],
     }, [
     '1990',
     '1996',
@@ -273,20 +289,31 @@ Australia = pd.DataFrame({
 
 # Cleaning DataFrame by coverting NaNs to zeros
 
-Australia = Australia.fillna(0)
+Germany = Germany.fillna(0)
 
-# Calculating Correlation for Australia
+# Calculating Correlation for Germany
 
-Australia.corr()
+Germany.corr()
 
-# Plotting Heatmap Correlation for Australia
+# Plotting Heatmap Correlation for Germany
 
-plt.figure(figsize=(8, 5))
-sns.heatmap(Australia.corr(), annot=True, cmap='Wistia',
-            xticklabels=True, yticklabels=True)
-plt.xticks(rotation=45)
-plt.yticks(rotation=45)
-plt.title('Australia Correlation Heatmap'.upper(), fontweight='bold')
+germ_cor = Germany.corr()
+plt.imshow(germ_cor, cmap='coolwarm', interpolation='none')
+plt.colorbar()
+plt.xticks(range(len(Germany.columns)), Germany.columns, rotation=65)
+plt.yticks(range(len(Germany.columns)), Germany.columns)
+plt.gcf().set_size_inches(8, 8)
 
-plt.savefig('Australia_Heatmap.png')
-plt.show()
+lab = germ_cor.values
+for a in range(lab.shape[0]):
+    for b in range(lab.shape[1]):
+        plt.text(
+            b,
+            a,
+            '{:.2f}'.format(lab[a, b]),
+            ha='center',
+            va='center',
+            color='black',
+            )
+plt.title('Germany Correlation Heatmap'.upper(), fontweight='bold')
+plt.savefig('Germany_Heatmap.png')
